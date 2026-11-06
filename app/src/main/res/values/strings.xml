@@ -199,6 +199,8 @@
     <string name="msg_app_not_installed">App not installed</string>
     <string name="msg_notification_permission_required">Notification permission required to pin</string>
     <string name="msg_notification_permission_denied">Notification permission denied</string>
+    <string name="msg_share_pinned">Pinned</string>
+    <string name="msg_share_pin_failed">Couldn\'t pin that</string>
     <string name="msg_locked_note_no_widget">Locked notes can\'t be shown on the home screen</string>
     <string name="msg_launcher_no_widget_pinning">Your launcher doesn\'t support widget pinning</string>
     <string name="msg_delete_label_confirm">\"%1$s\" will be removed from all notes. The notes themselves stay.</string>

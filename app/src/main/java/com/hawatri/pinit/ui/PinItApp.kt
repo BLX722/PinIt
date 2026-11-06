@@ -30,10 +30,6 @@ import com.hawatri.pinit.viewmodel.PinItViewModelFactory
 
 @Composable
 fun PinItApp(
-    sharedText: String? = null,
-    sharedImageUri: String? = null,
-    sharedPdfUri: String? = null,
-    sharedAudioUri: String? = null,
     sharedIcsUri: String? = null,
     widgetAction: String? = null,
     widgetOpenNoteId: String? = null,
@@ -101,46 +97,6 @@ fun PinItApp(
                 else -> "new_note?noteId=${note.id}"
             }
             navController.navigate(route)
-        }
-    }
-
-    // Handle incoming share intents — navigate after the nav graph is ready
-    LaunchedEffect(sharedText) {
-        if (sharedText != null) {
-            if (sharedText.startsWith("http://") || sharedText.startsWith("https://")) {
-                val encoded = Uri.encode(sharedText)
-                navController.navigate("new_link?url=$encoded")
-            } else {
-                val encoded = Uri.encode(sharedText)
-                navController.navigate("new_note?sharedText=$encoded")
-            }
-        }
-    }
-
-    LaunchedEffect(sharedImageUri) {
-        if (sharedImageUri != null) {
-            val encoded = Uri.encode(sharedImageUri)
-            navController.navigate("new_image?imageUri=$encoded")
-        }
-    }
-
-    LaunchedEffect(sharedPdfUri) {
-        if (sharedPdfUri != null) {
-            try {
-                context.contentResolver.takePersistableUriPermission(
-                    Uri.parse(sharedPdfUri),
-                    android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
-                )
-            } catch (_: Exception) { }
-            val encoded = Uri.encode(sharedPdfUri)
-            navController.navigate("new_pdf?pdfUri=$encoded")
-        }
-    }
-
-    LaunchedEffect(sharedAudioUri) {
-        if (sharedAudioUri != null) {
-            val encoded = Uri.encode(sharedAudioUri)
-            navController.navigate("new_audio?audioUri=$encoded")
         }
     }
 

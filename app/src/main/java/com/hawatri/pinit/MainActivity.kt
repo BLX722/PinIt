@@ -24,10 +24,6 @@ data class LaunchRequest(
     val id: Long = 0L,
     val widgetAction: String? = null,
     val widgetOpenNoteId: String? = null,
-    val sharedText: String? = null,
-    val sharedImageUri: String? = null,
-    val sharedPdfUri: String? = null,
-    val sharedAudioUri: String? = null,
     val sharedIcsUri: String? = null
 )
 
@@ -60,10 +56,6 @@ class MainActivity : FragmentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     PinItApp(
-                        sharedText = launch.sharedText,
-                        sharedImageUri = launch.sharedImageUri,
-                        sharedPdfUri = launch.sharedPdfUri,
-                        sharedAudioUri = launch.sharedAudioUri,
                         sharedIcsUri = launch.sharedIcsUri,
                         widgetAction = launch.widgetAction,
                         widgetOpenNoteId = launch.widgetOpenNoteId,
@@ -95,24 +87,6 @@ class MainActivity : FragmentActivity() {
 
     private fun extractLaunch(intent: Intent?): LaunchRequest {
         if (intent == null) return LaunchRequest()
-        val sharedText = if (intent.action == Intent.ACTION_SEND && intent.type == "text/plain") {
-            intent.getStringExtra(Intent.EXTRA_TEXT)
-        } else null
-
-        @Suppress("DEPRECATION")
-        val sharedImageUri = if (intent.action == Intent.ACTION_SEND && intent.type?.startsWith("image/") == true) {
-            intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)?.toString()
-        } else null
-
-        @Suppress("DEPRECATION")
-        val sharedPdfUri = if (intent.action == Intent.ACTION_SEND && intent.type == "application/pdf") {
-            intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)?.toString()
-        } else null
-
-        @Suppress("DEPRECATION")
-        val sharedAudioUri = if (intent.action == Intent.ACTION_SEND && intent.type?.startsWith("audio/") == true) {
-            intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)?.toString()
-        } else null
 
         @Suppress("DEPRECATION")
         val sharedIcsUri = if (intent.action == Intent.ACTION_SEND &&
@@ -123,10 +97,6 @@ class MainActivity : FragmentActivity() {
         return LaunchRequest(
             widgetAction = intent.getStringExtra("WIDGET_ACTION"),
             widgetOpenNoteId = intent.getStringExtra("WIDGET_OPEN_NOTE_ID"),
-            sharedText = sharedText,
-            sharedImageUri = sharedImageUri,
-            sharedPdfUri = sharedPdfUri,
-            sharedAudioUri = sharedAudioUri,
             sharedIcsUri = sharedIcsUri
         )
     }

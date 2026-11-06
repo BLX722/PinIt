@@ -1,6 +1,7 @@
 package com.hawatri.pinit.ui
 
 import android.annotation.SuppressLint
+import android.content.ClipData
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -147,12 +148,19 @@ fun NewImageScreen(
                             icon = Icons.Filled.Share,
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             onClick = {
-                                val intent = Intent(Intent.ACTION_SEND).apply {
-                                    type = "image/*"
-                                    putExtra(Intent.EXTRA_STREAM, selectedImageUri)
-                                    flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                                val imageUri = selectedImageUri
+                                if (imageUri != null) {
+                                    val intent = Intent(Intent.ACTION_SEND).apply {
+                                        type = "image/*"
+                                        putExtra(Intent.EXTRA_STREAM, imageUri)
+                                        clipData = ClipData.newRawUri("", imageUri)
+                                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                    }
+                                    val chooser = Intent.createChooser(intent, context.getString(R.string.share_image)).apply {
+                                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                    }
+                                    context.startActivity(chooser)
                                 }
-                                context.startActivity(Intent.createChooser(intent, context.getString(R.string.share_image)))
                             }
                         )
 

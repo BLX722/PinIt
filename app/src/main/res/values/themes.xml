@@ -3,6 +3,16 @@
 
     <style name="Theme.PinIt" parent="android:Theme.Material.Light.NoActionBar" />
 
+    <!-- Headless share target. No window, no animation, so the share sheet
+         returns to the app the user was in. -->
+    <style name="Theme.PinIt.Share" parent="@android:style/Theme.Translucent.NoTitleBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowDisablePreview">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
+
     <!-- Used by AddWidgetConfigActivity. The values-night/ variant gives us a dark
          counterpart that the system swaps in when the device is in dark mode. -->
     <style name="Theme.PinIt.Picker" parent="android:Theme.Material.Light.NoActionBar">

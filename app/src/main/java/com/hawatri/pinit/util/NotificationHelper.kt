@@ -3,6 +3,7 @@ package com.hawatri.pinit.util
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.ClipData
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -362,8 +363,10 @@ class NotificationHelper(private val context: Context) {
             }
             if (text.isNotBlank()) {
                 try {
+                    val imageUri = Uri.parse(text)
                     val viewIntent = Intent(Intent.ACTION_VIEW).apply {
-                        setDataAndType(Uri.parse(text), "image/*")
+                        setDataAndType(imageUri, "image/*")
+                        clipData = ClipData.newRawUri("", imageUri)
                         flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK
                     }
                     val viewPending = PendingIntent.getActivity(
@@ -393,8 +396,10 @@ class NotificationHelper(private val context: Context) {
             }
             if (text.isNotBlank()) {
                 try {
+                    val pdfUri = Uri.parse(text)
                     val viewIntent = Intent(Intent.ACTION_VIEW).apply {
-                        setDataAndType(Uri.parse(text), "application/pdf")
+                        setDataAndType(pdfUri, "application/pdf")
+                        clipData = ClipData.newRawUri("", pdfUri)
                         flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK
                     }
                     val viewPending = PendingIntent.getActivity(
