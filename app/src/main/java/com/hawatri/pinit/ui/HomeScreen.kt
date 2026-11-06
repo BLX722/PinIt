@@ -2,6 +2,7 @@ package com.hawatri.pinit.ui
 
 import android.app.Activity
 import android.app.KeyguardManager
+import android.content.ClipData
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -1302,9 +1303,13 @@ fun NoteCard(
                     val send = Intent(Intent.ACTION_SEND).apply {
                         type = mime
                         putExtra(Intent.EXTRA_STREAM, uri)
-                        flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                        clipData = ClipData.newRawUri("", uri)
+                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                     }
-                    context.startActivity(Intent.createChooser(send, context.getString(R.string.action_share)))
+                    val chooser = Intent.createChooser(send, context.getString(R.string.action_share)).apply {
+                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    }
+                    context.startActivity(chooser)
                 } catch (e: Exception) {
                     android.widget.Toast.makeText(context, context.getString(R.string.msg_couldnt_share), android.widget.Toast.LENGTH_SHORT).show()
                 }

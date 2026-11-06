@@ -1,5 +1,6 @@
 package com.hawatri.pinit.ui
 
+import android.content.ClipData
 import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -130,14 +131,18 @@ fun NewPDFScreen(
                             icon = Icons.Filled.OpenInBrowser,
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             onClick = {
-                                try {
-                                    val intent = Intent(Intent.ACTION_VIEW).apply {
-                                        setDataAndType(selectedPdfUri, "application/pdf")
-                                        flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                                val pdfUri = selectedPdfUri
+                                if (pdfUri != null) {
+                                    try {
+                                        val intent = Intent(Intent.ACTION_VIEW).apply {
+                                            setDataAndType(pdfUri, "application/pdf")
+                                            clipData = ClipData.newRawUri("", pdfUri)
+                                            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                        }
+                                        context.startActivity(intent)
+                                    } catch (e: Exception) {
+                                        android.widget.Toast.makeText(context, context.getString(R.string.msg_no_pdf_viewer_installed), android.widget.Toast.LENGTH_SHORT).show()
                                     }
-                                    context.startActivity(intent)
-                                } catch (e: Exception) {
-                                    android.widget.Toast.makeText(context, context.getString(R.string.msg_no_pdf_viewer_installed), android.widget.Toast.LENGTH_SHORT).show()
                                 }
                             }
                         )
@@ -147,12 +152,19 @@ fun NewPDFScreen(
                             icon = Icons.Filled.Share,
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             onClick = {
-                                val intent = Intent(Intent.ACTION_SEND).apply {
-                                    type = "application/pdf"
-                                    putExtra(Intent.EXTRA_STREAM, selectedPdfUri)
-                                    flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                                val pdfUri = selectedPdfUri
+                                if (pdfUri != null) {
+                                    val intent = Intent(Intent.ACTION_SEND).apply {
+                                        type = "application/pdf"
+                                        putExtra(Intent.EXTRA_STREAM, pdfUri)
+                                        clipData = ClipData.newRawUri("", pdfUri)
+                                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                    }
+                                    val chooser = Intent.createChooser(intent, context.getString(R.string.share_pdf)).apply {
+                                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                    }
+                                    context.startActivity(chooser)
                                 }
-                                context.startActivity(Intent.createChooser(intent, context.getString(R.string.share_pdf)))
                             }
                         )
                         // Archive
